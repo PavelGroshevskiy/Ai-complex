@@ -154,8 +154,17 @@ function isEven ($num) {
 	return boolval($num % 2 == 0);
 };
 
+function unicName(string $name):string { 
+	$arrOfLetters = str_split($name);
+	$arrUnicLetters = implode('',array_keys(array_count_values($arrOfLetters)));
+
+	return($arrUnicLetters);
+
+};
+
 function genderByNickname($nickname) {
 $nickname_trimmed = trim($nickname," ");
+unicName($nickname_trimmed);
 $nickname_length = iconv_strlen($nickname_trimmed);
 if(empty( $nickname_trimmed)) {
 		echo '<pre>';
@@ -165,14 +174,16 @@ if(empty( $nickname_trimmed)) {
 }
 	if (isEven($nickname_length)) {
 		echo '<pre>';
-		echo "Girl";
+		echo "Girl!";
 		echo '</pre>';
 	} else {
 		echo '<pre>';
-		echo "Boy";
+		echo "Boy!";
 		echo '</pre>';
 	};
 };
+
+
 
 genderByNickname($nickname)
 ?>
