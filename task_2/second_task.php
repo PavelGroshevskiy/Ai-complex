@@ -44,7 +44,7 @@ class Animal //phpcs:ignore PEAR.Commenting.ClassComment.WrongStyle
 
     public function __toString()
     {
-        return "$this->species" . "$this->count_of_legs" . "$this->count_of_tail" . "$this->count_of_wings";
+        return "$this->species" . "$this->count_of_tail" . "$this->count_of_wings";
     }
     public function iterateVisible()
     {
@@ -96,28 +96,43 @@ class Birds extends Animal
 
 class Beast_Cage
 {
-    function __construct( public Cage $species)
+    function __construct( public Animal $animal)
     {
+        if (($animal) instanceof Beasts) {
+            new Cage($animal);
+        } else {
+            echo "Неверный вид в клетке для зверей";
+        }
     }
 }
 
 class Fish_Cage
 {
-    function __construct( public Cage $species)
+    function __construct( public Animal $animal)
     {
+        if (($animal) instanceof Fishes) {
+            new Cage($animal);
+        } else {
+            echo "Неверный вид в клетке для рыб";
+        }
     }
 }
 
 class Bird_Cage
 {
-    function __construct( public Cage $species)
+    function __construct( public Animal $animal)
     {
+        if (($animal) instanceof Birds) {
+            new Cage($animal);
+        } else {
+            echo "Неверный вид в клетке для птиц";
+        }
     }
 }
 
 class Cage
 {
-
+    
     public static $arr = [];
 
     function __construct(Animal $animal)
@@ -154,11 +169,11 @@ class Zookeeper
 
     public function moveAnimalInCage(Animal $animal )
     {
-        if (get_class($animal) === 'Beasts') { return new Beast_Cage(new Cage($animal));
+        if (get_class($animal) === 'Beasts') { return new Beast_Cage($animal);
         }
-        if (get_class($animal) === 'Fishes') { return new Fish_Cage(new Cage($animal));
+        if (get_class($animal) === 'Fishes') { return new Fish_Cage($animal);
         }
-        if (get_class($animal) === 'Birds') { return new Bird_Cage(new Cage($animal));
+        if (get_class($animal) === 'Birds') { return new Bird_Cage($animal);
         }
     }
 
@@ -210,6 +225,11 @@ $zookeeper->moveAnimalInCage($bird);
 $zookeeper->selectAnimalInCage(new Animal('ле', 4, 1, 0));
 
 $manager->getInstanceZookeper($puma, $zookeeper);
+
+
+print_r(new Beast_Cage($fish)); // проверка на вид который попадает в клетку
+print_r(new Fish_Cage($lion)); // проверка на вид который попадает в клетку
+print_r(new Bird_Cage($puma)); // проверка на вид который попадает в клетку
 
 
 echo '</br>';
