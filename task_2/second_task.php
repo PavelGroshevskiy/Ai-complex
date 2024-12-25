@@ -15,6 +15,7 @@
 клетки по набору базовых признаков. Также нужно реализовать класс “менеджер”, 
 который будет получать из фабрики экземпляр, и отдавать “смотрителю”.
 */
+
 #[AllowDynamicProperties]
 // phpcs:ignore PEAR.Commenting.ClassComment.WrongStyle
 
@@ -94,51 +95,22 @@ class Birds extends Animal
     }
 }
 
-class Beast_Cage
-{
-    function __construct( public Animal $animal)
-    {
-        if (($animal) instanceof Beasts) {
-            new Cage($animal);
-        } else {
-            echo "Неверный вид в клетке для зверей";
-        }
-    }
-}
-
-class Fish_Cage
-{
-    function __construct( public Animal $animal)
-    {
-        if (($animal) instanceof Fishes) {
-            new Cage($animal);
-        } else {
-            echo "Неверный вид в клетке для рыб";
-        }
-    }
-}
-
-class Bird_Cage
-{
-    function __construct( public Animal $animal)
-    {
-        if (($animal) instanceof Birds) {
-            new Cage($animal);
-        } else {
-            echo "Неверный вид в клетке для птиц";
-        }
-    }
-}
-
 class Cage
 {
-    
     public static $arr = [];
-
-    function __construct(Animal $animal)
+    function __construct(Animal $animal,?int $indecs_first, int $indecs_second)
     {
-        self::$arr[] = $animal;
+        if ($indecs_second > 3) { 
+            echo 'Максимальная емкость 3';
+            return;
+        }
+        if($indecs_first) {
+            self::$arr[$indecs_first][$indecs_second] = $animal;
+        } else {
+            array_push(self::$arr, $animal);
+        }
     }
+
 
     public static function getOneAnimalCageByName(string $name) : mixed
     {
@@ -160,6 +132,51 @@ class Cage
     }
 }
 
+class Beast_Cage
+{
+    function __construct( public Animal $animal, $indecs_first, $indecs_second )
+    {
+        if (($animal) instanceof Beasts) {
+            new Cage($animal, $indecs_first, $indecs_second);
+        } else {
+            echo "<pre>";
+            echo "Неверный вид в клетке для зверей";
+            echo "</pre>";
+        }
+    }
+}
+
+class Fish_Cage
+{
+    function __construct( public Animal $animal,$indecs_first, $indecs_second)
+    {
+        if (($animal) instanceof Fishes) {
+            new Cage($animal, $indecs_first, $indecs_second);
+        } else {
+            echo "<pre>";
+            echo "Неверный вид в клетке для рыб";
+            echo "</pre>";
+        }
+    }
+}
+
+class Bird_Cage
+{
+    function __construct( public Animal $animal,$indecs_first, $indecs_second)
+    {
+        if (($animal) instanceof Birds) {
+            new Cage($animal, $indecs_first, $indecs_second);
+        } else {
+            echo "<pre>";
+            echo "Неверный вид в клетке для птиц";
+            echo "</pre>";
+
+        }
+    }
+}
+
+
+
 class Zookeeper
 {
     public $cage;
@@ -167,13 +184,15 @@ class Zookeeper
     {
     }
 
-    public function moveAnimalInCage(Animal $animal )
+    public function moveAnimalInCage(Animal $animal, $indecs_second, $indecs_first  )
     {
-        if (get_class($animal) === 'Beasts') { return new Beast_Cage($animal);
+        if (get_class($animal) === 'Beasts') { 
+
+            return new Beast_Cage($animal, $indecs_second, $indecs_first);
         }
-        if (get_class($animal) === 'Fishes') { return new Fish_Cage($animal);
+        if (get_class($animal) === 'Fishes') { return new Fish_Cage($animal, $indecs_second, $indecs_first);
         }
-        if (get_class($animal) === 'Birds') { return new Bird_Cage($animal);
+        if (get_class($animal) === 'Birds') { return new Bird_Cage($animal, $indecs_second, $indecs_first);
         }
     }
 
@@ -204,7 +223,7 @@ class Manager
 
     public function getInstanceZookeper(Animal $instance, Zookeeper $zookeper)
     {
-        $zookeper ->moveAnimalInCage($instance);
+        $zookeper ->moveAnimalInCage($instance, 4, 1);
     }
 }
 
@@ -217,19 +236,19 @@ $bird = new Birds('голубь', 2, 1, 2);
 $zookeeper = new Zookeeper();
 $manager = new Manager();
 
-$zookeeper->moveAnimalInCage($lion);
-$zookeeper->moveAnimalInCage($fish);
-$zookeeper->moveAnimalInCage($bird);
-$zookeeper->moveAnimalInCage($bird);
+$zookeeper->moveAnimalInCage($lion, 1, 2);
+$zookeeper->moveAnimalInCage($fish, 1, 1);
+$zookeeper->moveAnimalInCage($bird, 2, 2);
+$zookeeper->moveAnimalInCage($bird, 4, 3);
 
 $zookeeper->selectAnimalInCage(new Animal('ле', 4, 1, 0));
 
 $manager->getInstanceZookeper($puma, $zookeeper);
 
 
-print_r(new Beast_Cage($fish)); // проверка на вид который попадает в клетку
-print_r(new Fish_Cage($lion)); // проверка на вид который попадает в клетку
-print_r(new Bird_Cage($puma)); // проверка на вид который попадает в клетку
+// new Beast_Cage($fish, 2); // проверка на вид который попадает в клетку
+// new Fish_Cage($lion, 3); // проверка на вид который попадает в клетку
+// new Bird_Cage($puma, 2); // проверка на вид который попадает в клетку
 
 
 echo '</br>';
@@ -242,9 +261,5 @@ echo 'Все животные в клетках';
 echo '<pre>';
 print_r(Cage::getAllAnimalCage());
 echo '</pre>';
-
-
-
-
 
 ?>

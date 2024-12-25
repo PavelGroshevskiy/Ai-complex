@@ -18,43 +18,51 @@ http://php.net/manual/ru/language.oop5.php
 http://php.net/manual/ru/language.namespaces.php
 
 Задания для самостоятельной проверки пройденного:
-	⁃	Написать класс, реализующий вывод текста, 
-	написать наследников (вывод на принтер (образно), вывод на экран), 
-	реализовать методы для вывода текста, использовать свойства классов.
+    ⁃    Написать класс, реализующий вывод текста, 
+    написать наследников (вывод на принтер (образно), вывод на экран), 
+    реализовать методы для вывода текста, использовать свойства классов.
 
 
 */
 
-
 //1 ---------------------------------------------------------------------------------/ 
 
-class PrintSomething {
-	public static function print ($obj) {
-		print_r($obj);
-	}
+class PrintSomething
+{
+    public static function print($obj)
+    {
+        print_r($obj);
+    }
 }
 
-PrintSomething::print(new class {
-	public $text;
-	public function __construct(){
-		return $this->text = 'Anonim';
-	}
-});
+PrintSomething::print(
+    new class {
+        public $text;
+        public function __construct()
+        {
+            return $this->text = 'Anonim';
+        }
+    }
+);
 
-class PrintText {
-	function __construct()
-	{
-		
-	}
-	public function print($args){
-		var_dump($args);
-	}
+class PrintText
+{
+    function __construct()
+    {
+        
+    }
+    public function print($args)
+    {
+        var_dump($args);
+    }
 }
 
-class Print_On_Screen extends PrintText {
-	function __construct(){
-		
-	}
+class Print_On_Screen extends PrintText
+{
+    function __construct()
+    {
+        
+    }
 }
 
 
