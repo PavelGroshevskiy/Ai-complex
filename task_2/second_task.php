@@ -1,9 +1,10 @@
 <?php
+// phpcs:ignore PEAR.Commenting.FunctionComment.Missing
+
 //2
 
-
 /*
-⁃	Написать фабрику животных. Фабрика создает экземпляры с 
+⁃    Написать фабрику животных. Фабрика создает экземпляры с 
 набором свойств (Царство - звери, рыбы, птицы, количество лап, хвостов, крыльев).
 Нужен класс базового животного и расширенные классы для царств.
 Реализуем классы “клеток” для каждого царства, в которые можно 
@@ -14,135 +15,189 @@
 клетки по набору базовых признаков. Также нужно реализовать класс “менеджер”, 
 который будет получать из фабрики экземпляр, и отдавать “смотрителю”.
 */
-
 #[AllowDynamicProperties]
+// phpcs:ignore PEAR.Commenting.ClassComment.WrongStyle
 
-class Animal {
+class Animal //phpcs:ignore PEAR.Commenting.ClassComment.WrongStyle
+{
+        
+    private static $_count_animals = 0;
 
-		private static $count_animals = 0;
 
-    function __construct(public string $species,
-												public int $count_of_legs = 2, 
-												public int $count_of_tail = 1,
-												public int $count_of_wings = 0)
+    public function __construct(
+        public string $species, 
+        public int $count_of_tail,
+        public int $count_of_wings 
+    ) {
+        self::$_count_animals++;
+    }
+
+    public static function getCount() : int
+    {
+        return self::$_count_animals;
+    }
+
+    public function __destruct()
+    {
+        self::$_count_animals--;
+    }
+
+    public function __toString()
+    {
+        return "$this->species" . "$this->count_of_legs" . "$this->count_of_tail" . "$this->count_of_wings";
+    }
+    public function iterateVisible()
     {
 
-				self::$count_animals++;
+        $in_arr = [];
+        foreach ($this as $key => $value) {
+            array_push($in_arr, $value);
+        }
+        return (implode($in_arr));
     }
 
-		public static function getCount() : int
+    public  function getSpecies()
     {
-        return self::$count_animals;
+        echo $this->species;
     }
+}
 
-		public function __destruct()
+
+class Beasts extends Animal
+{
+    public function __construct(string $species,int $count_of_legs , int $count_of_tail, $count_of_wings)
     {
-        self::$count_animals--;
+        parent::__construct(
+            $species, 
+            $count_of_tail,
+            $count_of_wings
+        );
+        $this->count_of_legs = $count_of_legs;
+    }
+        
+}    
+
+class Fishes extends Animal
+{
+}
+
+class Birds extends Animal
+{
+    public function __construct(string $species,int $count_of_legs , int $count_of_tail, $count_of_wings)
+    {
+        parent::__construct(
+            $species, 
+            $count_of_tail,
+            $count_of_wings
+        );
+        $this->count_of_legs = $count_of_legs;
+    }
+}
+
+class Beast_Cage
+{
+    function __construct( public Cage $species)
+    {
+    }
+}
+
+class Fish_Cage
+{
+    function __construct( public Cage $species)
+    {
+    }
+}
+
+class Bird_Cage
+{
+    function __construct( public Cage $species)
+    {
+    }
+}
+
+class Cage
+{
+
+    public static $arr = [];
+
+    function __construct(Animal $animal)
+    {
+        self::$arr[] = $animal;
     }
 
-		public function __toString()
-		{
-			return "$this->species" . "$this->count_of_legs" . "$this->count_of_tail" . "$this->count_of_wings";
-		}
-		public function iterateVisible() {
+    public static function getOneAnimalCageByName(string $name) : mixed
+    {
 
-			$in_arr = [];
-      foreach ($this as $key => $value) {
-          array_push($in_arr,$value);
-				}
-				return (implode($in_arr));
+        $arrExistAnimal = array_map( 
+            function ($animal) {
+                foreach($animal as $value) {
+                    return ($value);
+                };
+            }, self::$arr
+        );
+
+        return  array_filter($arrExistAnimal, fn($value) => $value == $name);
     }
 
-		public  function getSpecies () {
-			echo $this->species;
-		}
+    public static function getAllAnimalCage(): array
+    {
+        return (self::$arr);
+    }
+}
+
+class Zookeeper
+{
+    public $cage;
+    function __construct( )
+    {
+    }
+
+    public function moveAnimalInCage(Animal $animal )
+    {
+        if (get_class($animal) === 'Beasts') { return new Beast_Cage(new Cage($animal));
+        }
+        if (get_class($animal) === 'Fishes') { return new Fish_Cage(new Cage($animal));
+        }
+        if (get_class($animal) === 'Birds') { return new Bird_Cage(new Cage($animal));
+        }
+    }
+
+    function selectAnimalInCage($base_params)
+    {
+        $base_params->iterateVisible();
+        $arrExistAnimal = [];
+        foreach(Cage::$arr as $one_animal) {
+            foreach($one_animal as $animal) {
+                (array_push($arrExistAnimal, $animal));
+            }
+        }
+        $chanked_array = array_chunk($arrExistAnimal, 4);
+        $to_string_array_animal = array_map(fn($arr) => implode($arr), $chanked_array);
+
+        foreach ($to_string_array_animal as $item) {
+            if ($base_params == $item) {
+                echo '<pre>';
+                echo "Выбрано животное: " . "$item";
+                echo '</pre>';
+            } 
+        }
+    }    
+}
+
+class Manager
+{
+
+    public function getInstanceZookeper(Animal $instance, Zookeeper $zookeper)
+    {
+        $zookeper ->moveAnimalInCage($instance);
+    }
 }
 
 
-class Beasts extends Animal{}
-class Fishes extends Animal{}
-class Birds extends Animal{}
-
-class Beast_Cage {
-	function __construct( public Cage $species) {}
-}
-
-class Fish_Cage {
-	function __construct( public Cage $species) {}
-}
-
-class Bird_Cage {
-	function __construct( public Cage $species) {}
-}
-
-class Cage {
-
-		public static $arr = [];
-
-    function __construct(Animal $animal){
-			self::$arr[] = $animal;
-		}
-
-		public static function getOneAnimalCageByName(string $name) : mixed {
-
-			$arrExistAnimal = array_map( 
-				function  ($animal) {
-				foreach($animal as $value) {
-					return ($value);
-				};
-			}, self::$arr);
-
-			return  array_filter($arrExistAnimal, fn($value) => $value == $name ) ;
-		}
-
-		public static function getAllAnimalCage(): array {
-			return (self::$arr);
-		}
-}
-
-class Zookeeper {
-		public $cage;
-    function __construct( ){}
-
-		public function moveAnimalInCage(Animal $animal ) {
-			if (get_class($animal) === 'Beasts') return new Beast_Cage(new Cage($animal));
-			if (get_class($animal) === 'Fishes') return new Fish_Cage(new Cage($animal));
-			if (get_class($animal) === 'Birds') return new Bird_Cage(new Cage($animal));
-	}
-
-	function selectAnimalInCage($base_params){
-		$base_params->iterateVisible();
-		$arrExistAnimal = [];
-		foreach(Cage::$arr as $one_animal) {
-			foreach($one_animal as $animal) {
-				(array_push($arrExistAnimal,$animal));
-			}
-		}
-			$chanked_array = array_chunk($arrExistAnimal,4);
-			$to_string_array_animal = array_map( fn($arr) => implode($arr) ,$chanked_array);
-
-			foreach ($to_string_array_animal as $item) {
-				if ($base_params == $item) {
-					echo '<pre>';
-					echo "Выбрано животное: " . "$item";
-					echo '</pre>';
-				} 
-		}
-	}	
-}
-
-	class Manager {
-
-		public function getInstanceZookeper (Animal $instance, Zookeeper $zookeper) {
-			$zookeper ->moveAnimalInCage($instance);
-		}
-	}
-
-
-$lion = new Beasts('лев',4,1,0);
-$puma = new Beasts('пума',4,1,0);
-$fish = new Fishes('лещ',0,1,0);
-$bird = new Birds('голубь',2,1,2);
+$lion = new Beasts('лев', 4, 1, 0);
+$puma = new Beasts('пума', 4, 1, 0);
+$fish = new Fishes('лещ', 1, 0);
+$bird = new Birds('голубь', 2, 1, 2);
 
 $zookeeper = new Zookeeper();
 $manager = new Manager();
@@ -152,7 +207,7 @@ $zookeeper->moveAnimalInCage($fish);
 $zookeeper->moveAnimalInCage($bird);
 $zookeeper->moveAnimalInCage($bird);
 
-$zookeeper->selectAnimalInCage(new Animal('ле',4,1,0));
+$zookeeper->selectAnimalInCage(new Animal('ле', 4, 1, 0));
 
 $manager->getInstanceZookeper($puma, $zookeeper);
 
