@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Console\View\Components\Task;
+use App\Models\Post;
 use Illuminate\Http\Request;
 
-class TasksController extends Controller
+class PostsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('tasks.index')
-        ->with('tasks', Task::all());
+        $title = "Posts";
+
+        return view('posts.index')
+        ->with('posts', Post::all());
     }
 
     /**
@@ -21,8 +23,7 @@ class TasksController extends Controller
      */
     public function create()
     {
-        return 'create task';
-        //
+        return view('posts.create');
     }
 
     /**
@@ -30,8 +31,15 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
-        Task::create(request()->only(['title', 'description']));
-        return redirect('tasks');
+
+        $title = $request->input('title');
+        $description = $request->input('description');
+
+        // print_r("$title, $description");
+
+        Post::create($request->only(['title', 'description']));
+
+        return redirect('posts');
     }
 
     /**
@@ -39,7 +47,11 @@ class TasksController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return view(
+            'posts.show', [
+            'post' => Post::findOrFail($id)
+            ]
+        );
     }
 
     /**
@@ -66,3 +78,4 @@ class TasksController extends Controller
         //
     }
 }
+

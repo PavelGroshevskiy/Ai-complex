@@ -1,19 +1,28 @@
 <?php
 
 use App\Http\Controllers\Main\IndexController;
-use App\Http\Controllers\TasksController;
+use App\Http\Controllers\PostsController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [IndexController::class, 'index']);
 
-// Route::controller(TasksController::class)->group(
-//     function () {
-//         Route::get('tasks/create', 'create')->name('create');
-//         Route::post('tasks', 'store')->name('store');
-//     }
-// );
+Route::get(
+    '/test', function (Illuminate\Http\Request $request) {
+        return [
+        'method' => $request->method(),
+        'url' => $request->url(),
+        'path' => $request->path(),
+        'fullUrl' => $request->fullUrl(),
+        'ip' => $request->ip(),
+        'userAgent' => $request->userAgent(),
+        'header' => $request->header(),
+        ];
+    }
+);
 
-Route::resource('tasks', TasksController::class);
+
+Route::resource('posts', PostsController::class);
 
 
 //  Контроллеры групп маршрутов
