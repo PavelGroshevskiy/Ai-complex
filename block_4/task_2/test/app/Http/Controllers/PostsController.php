@@ -12,8 +12,6 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $title = "Posts";
-
         return view('posts.index')
         ->with('posts', Post::all());
     }
@@ -31,14 +29,7 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-
-        $title = $request->input('title');
-        $description = $request->input('description');
-
-        // print_r("$title, $description");
-
         Post::create($request->only(['title', 'description']));
-
         return redirect('posts');
     }
 
