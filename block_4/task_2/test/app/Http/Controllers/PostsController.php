@@ -12,6 +12,12 @@ class PostsController extends Controller
      */
     public function index()
     {
+        $red = '#f00';
+        $color = 'red';
+        echo $color;
+        $headline = crc32('127.0.0.1');
+        // echo $headline;
+
         return view('posts.index')
         ->with('posts', Post::all());
     }
