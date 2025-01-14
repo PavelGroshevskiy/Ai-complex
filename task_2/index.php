@@ -36,15 +36,15 @@ class PrintSomething
     }
 }
 
-PrintSomething::print(
-    new class {
-        public $text;
-        public function __construct()
-        {
-            return $this->text = 'Anonim';
-        }
-    }
-);
+// PrintSomething::print(
+//     new class {
+//         public $text;
+//         public function __construct()
+//         {
+//             return $this->text = 'Anonim';
+//         }
+//     }
+// );
 
 class PrintText
 {
@@ -68,12 +68,12 @@ class Print_On_Screen extends PrintText
 
 
 
-$var1 = new PrintText();
+// $var1 = new PrintText();
 // echo '<pre>';
 // echo $var1->print('te');
 // echo '</pre>';
 
-$screen = new Print_On_Screen;
+// $screen = new Print_On_Screen;
 // $screen->print('Print on screen');
 
 
