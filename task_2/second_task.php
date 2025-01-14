@@ -61,7 +61,7 @@ class Animal //phpcs:ignore PEAR.Commenting.ClassComment.WrongStyle
 }
 
 
-class Beasts extends Animal
+class Beast extends Animal
 {
     public function __construct(string $species , int $count_of_tail, $count_of_wings, int $count_of_legs = 0)
     {
@@ -75,11 +75,11 @@ class Beasts extends Animal
         
 }    
 
-class Fishes extends Animal
+class Fish extends Animal
 {
 }
 
-class Birds extends Animal
+class Bird extends Animal
 {
     public function __construct(string $species,int $count_of_legs , int $count_of_tail, $count_of_wings)
     {
@@ -98,11 +98,11 @@ abstract class FactoryAbstract
     {
         switch ($type) {
             case 'Beast':
-                return new Beasts(...$params);
+                return new Beast(...$params);
             case 'Fish':
-                return new Fishes(...$params);
+                return new Fish(...$params);
             case 'Bird':
-                return new Birds(...$params);
+                return new Bird(...$params);
             default:
             return null;
         }
@@ -158,22 +158,6 @@ class Cage
     {
         return (self::$arr);
     }
-}
-
-class Beast_Cage extends Cage
-{
-    public array $beast_cage = [];
-    public int $cage_index;
-    
-    function __construct( public Beasts|Birds $animal)
-    {
-        $this->animal = $animal;
-        $this->beast_cage[] = $this->animal;
-        $this->status = CageStatus::HALF;
-        $this->capacity++;  
-        $this->cage_index = self::$cages_index;
-        self::$cages_index++;
-    }
 
     public function status()
     {
@@ -181,8 +165,24 @@ class Beast_Cage extends Cage
         echo "status: $this->status";
         echo " capacity: $this->capacity" . PHP_EOL;
         echo " index: $this->cage_index" . PHP_EOL;
-        print_r($this->beast_cage);
         echo "</pre>";
+    }
+}
+
+class Beast_Cage extends Cage
+{
+    public array $beast_cage = [];
+    public int $cage_index;
+    
+    function __construct( public Beast|Bird $animal)
+    {
+        $this->animal = $animal;
+        $this->beast_cage[] = $this->animal;
+        $this->status = CageStatus::HALF;
+        $this->capacity++;  
+        $this->cage_index = self::$cages_index;
+        self::$cages_index++;
+        return $this;
     }
 
     public function getArr() 
@@ -190,7 +190,7 @@ class Beast_Cage extends Cage
         return $this->beast_cage;
     }
 
-    public function addAnimalInBeastCage(Beasts|Birds $animal)
+    public function addAnimalInCage(Beast|Bird $animal)
     {
 
         if ($this->capacity < $this->max_capacity) {
@@ -210,7 +210,7 @@ class Fish_Cage extends Cage
     protected $fish_cage = [];
     public int $cage_index;
     
-    function __construct( public Fishes $animal)
+    function __construct( public Fish $animal)
     {
         $this->animal = $animal;
         $this->fish_cage[] = $this->animal;
@@ -220,22 +220,12 @@ class Fish_Cage extends Cage
         self::$cages_index++;
     }
 
-    public function status()
-    {
-        echo "<pre>";
-        echo "status: $this->status";
-        echo " capacity: $this->capacity" . PHP_EOL;
-        echo " index: $this->cage_index" . PHP_EOL;
-        print_r($this->fish_cage);
-        echo "</pre>";
-    }
-
      public function getArr() 
     {
         return $this->fish_cage;
     }
 
-    public function addAnimalInFishCage(Fishes $animal)
+    public function addAnimalInCage(Fish $animal)
     {
 
         if ($this->capacity < $this->max_capacity) {
@@ -255,7 +245,7 @@ class Bird_Cage extends Cage
     protected $bird_cage = [];
     public int $cage_index;
     
-    function __construct( public Beasts|Birds $animal)
+    function __construct( public Beast|Bird $animal)
     {
         $this->animal = $animal;
         $this->bird_cage[] = $this->animal;
@@ -265,22 +255,14 @@ class Bird_Cage extends Cage
         self::$cages_index++;
     }
 
-    public function status()
-    {
-        echo "<pre>";
-        echo "status: $this->status";
-        echo " capacity: $this->capacity" . PHP_EOL;
-        echo " index: $this->cage_index" . PHP_EOL;
-        print_r($this->bird_cage);
-        echo "</pre>";
-    }
+    
 
     public function getArr() 
     {
         return $this->bird_cage;
     }
 
-    public function addAnimalInBirdCage(Beasts|Birds $animal)
+    public function addAnimalInCage(Beast|Bird $animal)
     {
 
         if ($this->capacity < $this->max_capacity) {
@@ -304,70 +286,39 @@ class Zookeeper
     {
     }
 
-    // public function moveAnimalByClass($animalCage,$animal)
-    // {
-    //     if ($animalCage == null) {
-    //             $animalCage = new Beast_Cage($animal);
-    //             Cage::$arr[$animalCage->cage_index] = $animalCage;
-    //     } else {
-    //         $animalCage->addAnimalInBeastCage($animal);
-    //         Cage::$arr[$animalCage->cage_index] = $animalCage;
-    //     }
-
-    //     if ($animalCage->status == CageStatus::FULL) {
-    //         Cage::$arr[$animalCage->cage_index] = $animalCage;
-    //         $animalCage = null;
-    //     }
-    // }
+    public function moveAnimalByClass(&$cage, $animal)
+    {
+        $get_name_class = get_class($animal) . '_Cage';
+        if ($cage == null) {
+                    $cage = new $get_name_class($animal);
+                    Cage::$arr[$cage->cage_index] = $cage->getArr();
+                } else {
+                    $cage->addAnimalInCage($animal);
+                    Cage::$arr[$cage->cage_index] = $cage->getArr();
+                }
+                if ($cage->status == CageStatus::FULL) {
+                    Cage::$arr[$cage->cage_index] = $cage->getArr();
+                    $cage = null;
+                }
+    }
 
     public function moveAnimalInCage(Animal $animal)
     {
         switch(get_class($animal)) {
-        case 'Beasts':
-            // $this->moveAnimalByClass($this->beast_cage, $animal);
-            if ($this->beast_cage == null) {
-                $this->beast_cage = new Beast_Cage($animal);
-                Cage::$arr[$this->beast_cage->cage_index] = $this->beast_cage->getArr();
-            } else {
-                $this->beast_cage->addAnimalInBeastCage($animal);
-                Cage::$arr[$this->beast_cage->cage_index] = $this->beast_cage->getArr();
-            }
-            if ($this->beast_cage->status == CageStatus::FULL) {
-                Cage::$arr[$this->beast_cage->cage_index] = $this->beast_cage->getArr();
-                $this->beast_cage = null;
-
-            }
+        case 'Bird' :
+            // $this->moveAnimalByClass($this->bird_cage, $animal);
+            $this->moveAnimalByClass($this->beast_cage, $animal);
             break;
-        case 'Fishes':
-            if ($this->fish_cage == null) {
-                $this->fish_cage = new Fish_Cage($animal);
-                Cage::$arr[$this->fish_cage->cage_index] = $this->fish_cage->getArr();
-            } else {
-                $this->fish_cage->addAnimalInFishCage($animal);
-                Cage::$arr[$this->fish_cage->cage_index] = $this->fish_cage->getArr();
-            }
+        case 'Beast':
+            $this->moveAnimalByClass($this->beast_cage, $animal);
+            // $this->moveAnimalByClass($this->bird_cage, $animal);
 
-            if ($this->fish_cage->status == CageStatus::FULL) {
-                Cage::$arr[$this->fish_cage->cage_index] = $this->fish_cage->getArr();
-                $this->fish_cage = null;
-            }   
             break;
-        case 'Birds' :
-            if ($this->bird_cage == null) {
-                $this->bird_cage = new Bird_Cage($animal);
-                Cage::$arr[$this->bird_cage->cage_index] = $this->bird_cage->getArr();
-
-            } else {
-                $this->bird_cage->addAnimalInBirdCage($animal);
-                Cage::$arr[$this->bird_cage->cage_index] = $this->bird_cage->getArr();
-
-            }
-            if ($this->bird_cage->status == CageStatus::FULL) {
-                Cage::$arr[$this->bird_cage->cage_index] = $this->bird_cage->getArr();
-                $this->bird_cage = null;
-            } 
-            break;  
-            
+        case 'Fish':
+            $this->moveAnimalByClass($this->fish_cage, $animal); 
+            break;
+        default:
+            return null;
         }
     }
 
@@ -403,14 +354,15 @@ class Manager
     }
 }
 
-$lion = new Beasts('lion', 1, 0, 4);
-$volk = new Beasts('volk', 1, 0, 4);
-$puma = new Beasts('puma', 1, 0, 4);
-$vorona = new Birds('vorona', 2, 1, 2);
-$sova = new Birds('sova', 2, 1, 2);
-$golub = new Birds('golub', 2, 1, 2);
-$bird = new Birds('bird', 2, 1, 2);
-$lesch = new Fishes('lesch', 1, 0);
+$lion = new Beast('lion', 1, 0, 4);
+$volk = new Beast('volk', 1, 0, 4);
+$puma = new Beast('puma', 1, 0, 4);
+$vorona = new Bird('vorona', 2, 1, 2);
+$sova = new Bird('sova', 2, 1, 2);
+$golub = new Bird('golub', 2, 1, 2);
+$bird = new Bird('bird', 2, 1, 2);
+$orel = new Bird('orel', 2, 1, 2);
+$lesch = new Fish('lesch', 1, 0);
 
 $zookeeper = new Zookeeper();
 $manager = new Manager();
@@ -419,10 +371,13 @@ $zookeeper->moveAnimalInCage($lion);
 $zookeeper->moveAnimalInCage($volk);
 $zookeeper->moveAnimalInCage($puma);
 $zookeeper->moveAnimalInCage($vorona);
+$zookeeper->moveAnimalInCage($puma);
+$zookeeper->moveAnimalInCage($golub);
 $zookeeper->moveAnimalInCage($sova);
 $zookeeper->moveAnimalInCage($golub);
 $zookeeper->moveAnimalInCage($puma);
 $zookeeper->moveAnimalInCage($lesch);
+
 
 $zookeeper->selectAnimalInCage($factory->create('Beast', 'lion', 1, 0, 4));
 $zookeeper->selectAnimalInCage($factory->create('Fish', 'lesch', 1, 0));
@@ -431,7 +386,6 @@ $zookeeper->selectAnimalInCage($factory->create('Bird', 'vorona', 2, 1, 2));
 $manager->getInstanceZookeper($puma, $zookeeper);
 $manager->getInstanceZookeper($lesch, $zookeeper);
 $manager->getInstanceZookeper($vorona, $zookeeper);
-
 
 echo '<pre>';
 echo 'Все животные в клетках';
