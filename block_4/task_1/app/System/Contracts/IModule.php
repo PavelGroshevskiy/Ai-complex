@@ -2,6 +2,7 @@
 
 namespace System\Contracts;
 
-interface IModule{
-	public function registerRoutes(IRouter $router) : void;
+interface IModule
+{
+    public function registerRoutes(IRouter $router) : void;
 }

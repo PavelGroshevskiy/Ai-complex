@@ -33,7 +33,6 @@ class Router implements IRouter
         $params = explode('/', $relativeUrl);
         $controller = new $route['c']();
         $controller->setEnviroment($params);
-        // var_dump($controller instanceof IController); // hmmmm
 
         return [
         'controller' => $controller,
@@ -52,7 +51,7 @@ class Router implements IRouter
         }
 
         if ($activeRoute === null) {
-            throw new Exc404('route not found');
+            throw new Exc404('Article not created yet');
         }
 
         return $activeRoute;

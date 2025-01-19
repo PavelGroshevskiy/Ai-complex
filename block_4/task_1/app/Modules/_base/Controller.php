@@ -8,10 +8,10 @@ use System\Template;
 
 class Controller implements IController
 {
+
+    protected array $env;
     protected string $title = '';
     protected string $content = '';
-    protected array $env;
-
     public function setEnviroment(array $urlParams) : void
     {
         $this->env = $urlParams;
@@ -19,8 +19,10 @@ class Controller implements IController
     
     public function render() : string
     {
+
         return Template::render(
-            __DIR__ . '/v_main.php', [
+            __DIR__ . '/v_main.php', 
+            [
             'title' => $this->title,
             'content' => $this->content
             ]

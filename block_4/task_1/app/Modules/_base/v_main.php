@@ -12,8 +12,9 @@
     <a href="<?php echo BASE_URL?>">Home</a>
     <a href="<?php echo BASE_URL?>article/1">Art 1</a>
     <a href="<?php echo BASE_URL?>article/2">Art 2</a>
+    <a href="<?php echo BASE_URL?>article/create">Create</a>
     <hr>
-    <?php echo $content?>
+    <?php echo ($content)?>
     <hr>
     footer
 </body>

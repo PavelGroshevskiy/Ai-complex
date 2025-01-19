@@ -38,26 +38,20 @@ try{
     $router = new Router(BASE_URL);
 
     $modules->registerRoutes($router);
-    /*      */
 
     $uri = $_SERVER['REQUEST_URI'];
     $activeRoute = $router->resolvePath($uri);
 
     $c = $activeRoute['controller'];
     $m = $activeRoute['method'];
-
+    
     $c->$m();
     $html = $c->render();
     echo $html;
 }
-catch(Exc404 $e){
-    echo '404'; 
+catch(Exc404 $e) {
+    echo $e->getMessage();
 }
-catch(Throwable $e){
-    echo 'nice show error - ' . $e->getMessage();
+catch(Throwable $e) {
+    echo $e->getMessage() . $e->getTrace();
 }
-
-
-    // echo '<pre>';
-    // print_r($activeRoute);
-    // echo '</pre>';
