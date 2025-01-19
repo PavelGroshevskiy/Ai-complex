@@ -9,11 +9,10 @@ use System\Template;
 
 class Index extends BaseController
 {
-    protected $storage;
-
+    protected Article $new_article;
     public function __construct()
     {
-        $this->storage = FileStorage::getInstance('db/articles.txt');
+        $this->new_article = new Article();
     }
 
     public function create()
@@ -26,23 +25,23 @@ class Index extends BaseController
         if ($_SERVER["REQUEST_METHOD"] === 'POST') {
             $art = new Article(...$_POST);
             $art->addInBD($_POST);
-            exit();
         }
     }
 
     public function index()
     {
         $this->title = 'Home page';
-        $this->content = 'Articles list';
+        $this->content = Template::render(
+            __DIR__ . '/../Views/v_item_list.php', 
+            ['articles' => $this->new_article->getAll()]
+        );
     }
 
     public function item()
     {        
         $this->title = 'Article page';
         $id = (int)$this->env[1];
-        $article = (new Article())->get($id);
-
-        print_r($article);
+        $article = $this->new_article->get($id);
 
         $this->content = Template::render(
             __DIR__ . '/../Views/v_item.php', 

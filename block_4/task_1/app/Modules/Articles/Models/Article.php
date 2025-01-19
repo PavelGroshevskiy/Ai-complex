@@ -52,5 +52,15 @@ class Article extends FileStorage
         }
 
     }
+    public function getAll() : ?array
+    {
+        if (isset($this->storage->records)) {
+            return $this->storage->records;
+        } else {
+            throw new Exception('НеТ статей');
+
+        }
+
+    }
 
 }
