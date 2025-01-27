@@ -53,5 +53,5 @@ catch(Exc404 $e) {
     echo $e->getMessage();
 }
 catch(Throwable $e) {
-    echo $e->getMessage() . $e->getTrace();
+    echo $e->getMessage();
 }

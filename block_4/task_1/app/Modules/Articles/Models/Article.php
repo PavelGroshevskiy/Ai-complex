@@ -57,6 +57,7 @@ class Article extends FileStorage
         if (isset($this->storage->records)) {
             return $this->storage->records;
         } else {
+
             throw new Exception('НеТ статей');
 
         }

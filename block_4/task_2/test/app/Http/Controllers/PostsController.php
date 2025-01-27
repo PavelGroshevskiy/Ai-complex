@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class PostsController extends Controller
@@ -12,11 +14,6 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $red = '#f00';
-        $color = 'red';
-        echo $color;
-        $headline = crc32('127.0.0.1');
-        // echo $headline;
 
         return view('posts.index')
         ->with('posts', Post::all());
@@ -33,7 +30,7 @@ class PostsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request) : RedirectResponse
     {
         Post::create($request->only(['title', 'description']));
         return redirect('posts');
@@ -42,18 +39,17 @@ class PostsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Post $post) : View
     {
-        return view(
-            'posts.show', [
-            'post' => Post::findOrFail($id)
-            ]
-        );
+        // return view(
+        //     'posts.show', [
+        //     'post' => Post::findOrFail($ id)
+        //     ]
+        // );
+
+        return view('posts.show')->with('post', $post);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         //
@@ -72,7 +68,7 @@ class PostsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        return Post::destroy($id);
     }
 }
 

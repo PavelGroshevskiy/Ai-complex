@@ -2,6 +2,7 @@
 
 namespace System;
 
+use Exception;
 use System\Contracts\IStorage;
 
 class FileStorage implements IStorage
@@ -24,10 +25,12 @@ class FileStorage implements IStorage
     {
         $this->dbPath = $dbPath;
 
-        if(file_exists($this->dbPath)) {
+        if (file_exists($this->dbPath)) {
             $data = json_decode(file_get_contents($this->dbPath), true);
             $this->records = $data['records'];
             $this->ai = $data['ai'];
+        } else {
+            throw new Exception('Отсутствует файл БД');
         }
     }
 }
