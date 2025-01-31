@@ -10,17 +10,17 @@ Create Job
 <div class="col-12">
 
     <h2>Create Post</h2>
-    <form id="create_post" method="POST" action="/posts" >
+    <form id="edit_post" method="POST" action={{route('posts.update', $post->id)}} >
         @csrf
+        @method('patch')
         <label for="title">Title</label>
-        <input type="text" name="title"  class="pt-6 dark:bg-black">
+        <input type="text" name="title" value={{$post->title}} class="pt-6 dark:bg-black">
 
         <label for="description">Body</label>
-        <input type="text" name="description" >
+        <input type="text" name="description" value={{$post->description}} >
 
-        <input type="submit" value="submit">
+        <input type="submit" value="update">
     </form>
-
     @if ($errors->any())
     <div class="alert alert-danger">
         <ul>

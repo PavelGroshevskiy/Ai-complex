@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Main\IndexController;
 use App\Http\Controllers\PostsController;
+use App\UserModels\UserModelPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,8 +35,11 @@ Route::resource('posts', PostsController::class);
 //     );
 
 // Запасные маршруты
-// Route::fallback(
-//     function () {
 
-//     }
-// );
+Route::fallback(
+    function () {
+        return response()->json(['message' => 'Route Not Found'], 404);
+    }
+);
+
+

@@ -32,7 +32,14 @@ class PostsController extends Controller
      */
     public function store(Request $request) : RedirectResponse
     {
-        Post::create($request->only(['title', 'description']));
+        $data = request()->validate(
+            [
+            'title' => 'bail|required|unique:posts|max:255',
+            'description' => 'required'
+            ]
+        );
+
+        Post::create($data);
         return redirect('posts');
     }
 
@@ -50,17 +57,27 @@ class PostsController extends Controller
         return view('posts.show')->with('post', $post);
     }
 
-    public function edit(string $id)
+    public function edit(Post $post)
     {
-        //
+        return view('posts.edit', compact('post'));
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Post $post)
     {
-        //
+
+        $data = request()->validate(
+            [
+            'title' => 'bail|required|unique:posts|max:255',
+            'description' => 'required'
+            ]
+        );
+
+        $post->update($data);
+        return redirect()->route('posts.show', $post->id);
     }
 
     /**

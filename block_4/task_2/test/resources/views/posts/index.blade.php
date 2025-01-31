@@ -4,23 +4,16 @@
 
 
 <h2>{{ 'Posts' }}</h2>
- <span>
-            <button id="refresh_posts">
-                Refresh Posts
-            </button>
-        </span>
+
 <ul>
     @forelse($posts as $post)
     <li>
+        <div>
         <a href="{{ route('posts.show', $post->id) }}">
             {{ $post->title }}
         </a>
         <p> - {{$post->description}}</p>
-        <span>
-            <button class="delete_post">
-                Delete
-            </button>
-        </span>
+        </div>
     </li>
     <hr>
     @empty
