@@ -1,6 +1,6 @@
 <?php
 
-use App\UserModels\UserModelPost;
+
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -19,7 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
             $exceptions->render(
                 function (NotFoundHttpException $e, Request $request) {
                     if ($request->is('posts/*')) {
-                        dd(UserModelPost::class);
+                        return response()->redirectTo('/posts/1');
                     }
                 }
             );

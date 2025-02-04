@@ -14,7 +14,6 @@ class PostsController extends Controller
      */
     public function index()
     {
-
         return view('posts.index')
         ->with('posts', Post::all());
     }
@@ -38,7 +37,6 @@ class PostsController extends Controller
             'description' => 'required'
             ]
         );
-
         Post::create($data);
         return redirect('posts');
     }
@@ -48,19 +46,12 @@ class PostsController extends Controller
      */
     public function show(Post $post) : View
     {
-        // return view(
-        //     'posts.show', [
-        //     'post' => Post::findOrFail($ id)
-        //     ]
-        // );
-
         return view('posts.show')->with('post', $post);
     }
 
     public function edit(Post $post)
     {
         return view('posts.edit', compact('post'));
-
     }
 
     /**
