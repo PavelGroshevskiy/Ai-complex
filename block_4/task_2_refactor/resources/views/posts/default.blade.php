@@ -3,8 +3,8 @@
 @section('content')
 
         <h1>Post</h1>
-            <p>Default</p>
-            <p>Default</p>
+            <p>{{$title}}</p>
+            <p>{{$description}}</p>
 
 @endsection
 
