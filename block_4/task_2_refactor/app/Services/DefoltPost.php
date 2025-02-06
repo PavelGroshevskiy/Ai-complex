@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\Http\Controllers\Controller;
+
 use Illuminate\Support\Facades\Cache;
 
-class DefoltPost extends Controller
+class DefoltPost
 {
 
     public function index()
