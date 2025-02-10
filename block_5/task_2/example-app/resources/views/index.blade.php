@@ -14,62 +14,140 @@
 </nav>
 
 <h2> Posts</h2>
- <span>
-            <button id="refresh_posts">
-                Refresh Posts
-            </button>
-        </span>
-<ul>
-    @forelse($posts as $post)
+    <span>
+        <button id="refresh_posts_html">
+            Refresh Posts Html
+        </button>
+        <button id="refresh_posts_json">
+            Refresh Posts json
+        </button>
+    </span>
 
-    <li class="post_card">
-            {{-- <a href="{{ route('posts.show', $post->id) }}"> --}}
-                {{-- <p class="hidden_id" hidden>{{ $post->id }}</p> --}}
-                {{ $post->title }}
-            </a>
-            <p> - {{$post->description}}</p>
-            <span>
+    <ul id="posts">
+
+        @forelse($posts as $post)
+
+
+            <li class="post_card">
+                <p class="title">  {{ $post->title }}</p>
+                <p class="description"> - {{$post->description}}</p>
+
                 <button data-num = {{$post->id}} class="delete_post">
-                   Delete
+                    Delete
                 </button>
-            </span>
 
-    </li>
-    <hr>
-    @empty
-    <li>No Posts Found</li>
-    @endforelse
-</ul>
+                <hr>
+            </li>
 
-    <div id="result"></div>
+        @empty
+        <li>No Posts Found</li>
+        @endforelse
+    </ul>
+    <div >
+        <ul id="result">
 
+        </ul>
+    </div>
 </body>
- <script type="text/javascript">
-        $('.post_card .delete_post').on('click', function(e) {
 
-            console.log( $(this).attr('data-num'))
+ <script type="text/javascript">
+
+
+        const jsonData = {
+            container: '#result',
+            url: 'api/v1/poss',
+            delay:2000,
+            attemps:3,
+
+            reset: function() {
+                this.delay = 2000;
+                this.attempts = 3;
+                },
+
+            load: function() {
+                    let gallery = this;
+                        $.ajax({
+                            type:"get",
+                            url: this.url,
+                            success: function(data) {
+                                $('#posts').remove()
+                                $.each(data, function(idx,item) {
+                                    console.log(item)
+                                            let title = '<p>' + item.title + '</p>'
+                                            let description = '<p>' + item.description + '</p>'
+                                            let button = '<button data-num =' + item.id + " class=delete_post> Delete </button>"
+
+                                            let post = '<li>'
+                                                    +title
+                                                    +description
+                                                    +button
+                                                    +'<hr>'
+                                                    +'</li>'
+
+                                            $('#result').append(post)
+                                                    });
+                                                },
+                            error: function(xhr, status) {
+                                        if (gallery.attemps-- == 0) {
+                                            console.log('Over')
+                                            gallery.reset();
+                                            return;
+                                        }
+                                        setTimeout(function() {
+                                            gallery.load();
+                                            }, gallery.delay *= 2);
+                                    }
+
+                        });
+                                        },
+
+            display: function (data) {},
+
+            }
+
+        $('#refresh_posts_html').on('click',function() {
+
+            $('div#result').load('api/v1/posts', function(data, status, response) {
+                console.dir({data,status,response})
+
+
+            })
+        })
+
+            //d
+
+        $('#refresh_posts_json').on('click',function() {
+
+            jsonData.load()
+
+            // $.get('api/v1/posts')
+            //     .done(function(data,status,xhr) {
+            //         console.dir({data,status,xhr})
+            //     })
+            //     .fail(function(data,status,xhr) {
+            //         // console.dir({data,status,xhr})
+            //     })
+            //     .always(function(data,status,xhr) {
+            //         // console.dir({data,status,xhr})
+            //     })
+            // $.ajax({
+            //     type:"get",
+            //     url: 'api/v1/posts',
+            //     success: function(data) {
+            //         data.app
+            //         console.log(data)
+            //     }
+            // });
+        })
+
+$('.post_card .delete_post').on('click', function(e) {
+
+            $(this).parent().remove()
             $.ajax({
                 url:`api/v1/posts/${$(this).attr('data-num')}`,
                 type: "DELETE",
-
             })
         })
-
-        $('#refresh_posts').on('click',function() {
-
-            $('div#result').load('api/v1/posts', function(data, status, response) {
-                console.log(data)
-            })
-
-            $.getJSON('api/v1/posts',
-                function(result) {
-                    $.each(result , function() {
-                        console.log(this.title)
-                    })
-                });
-        })
-
-
     </script>
 </html>
 

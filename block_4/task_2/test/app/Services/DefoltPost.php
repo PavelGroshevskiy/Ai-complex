@@ -11,4 +11,9 @@ class DefoltPost
     ) {
 
     }
+
+    public function index()
+    {
+        return 'Hi';
+    }
 }

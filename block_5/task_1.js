@@ -12,13 +12,40 @@ function randomInteger(min, max) {
 }
 
 let randomNum = randomInteger(1, 10e29);
+let randomNumToBinary = randomNum.toString(2).concat("0", "1");
 
 function dangerOrNot() {
-    return randomNum.toString(2).includes("1111111") ? "YES" : "NO";
+    let count1 = 0;
+    let count2 = 0;
+    for (let i = 0; i <= randomNumToBinary.length; i++) {
+        console.log(console.dir({ count1, count2 }));
+        if (randomNumToBinary.split("")[i] == 0) {
+            count1++;
+            if (count1 == 7) {
+                return "YES 0";
+            }
+        } else {
+            count1 = 0;
+        }
+
+        if (randomNumToBinary.split("")[i] == 1) {
+            count2++;
+            if (count2 == 7) {
+                return "YES 1";
+            }
+        } else {
+            count2 = 0;
+        }
+    }
+    return "NO";
 }
 
+// return randomNum.toString(2).concat("0", "1").includes("1111111")
+//     ? "YES"
+//     : "NO";
+
 console.dir({
-    binary: randomNum.toString(2),
+    binary: randomNum.toString(2).concat("0", "1"),
     randomNum: randomNum,
     length: randomNum.toString(2).length,
 });
