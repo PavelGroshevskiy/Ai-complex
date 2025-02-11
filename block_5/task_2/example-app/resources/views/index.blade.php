@@ -27,7 +27,6 @@
 
         @forelse($posts as $post)
 
-
             <li class="post_card">
                 <p class="title">  {{ $post->title }}</p>
                 <p class="description"> - {{$post->description}}</p>
@@ -43,7 +42,7 @@
         <li>No Posts Found</li>
         @endforelse
     </ul>
-    <div >
+    <div id='html'>
         <ul id="result">
 
         </ul>
@@ -55,7 +54,7 @@
 
         const jsonData = {
             container: '#result',
-            url: 'api/v1/poss',
+            url: 'api/v1/posts',
             delay:2000,
             attemps:3,
 
@@ -65,19 +64,22 @@
                 },
 
             load: function() {
-                    let gallery = this;
+                    let json_data = this;
                         $.ajax({
                             type:"get",
                             url: this.url,
                             success: function(data) {
                                 $('#posts').remove()
+                                $('#result').remove()
+                                $('body').append('<div id=result> </div>')
+
                                 $.each(data, function(idx,item) {
                                     console.log(item)
                                             let title = '<p>' + item.title + '</p>'
                                             let description = '<p>' + item.description + '</p>'
                                             let button = '<button data-num =' + item.id + " class=delete_post> Delete </button>"
 
-                                            let post = '<li>'
+                                            let post = '<li class="post_card">'
                                                     +title
                                                     +description
                                                     +button
@@ -85,31 +87,55 @@
                                                     +'</li>'
 
                                             $('#result').append(post)
-                                                    });
-                                                },
+
+                                            $('.post_card .delete_post').on('click', function(e) {
+                                                $(this).parent().remove()
+                                                $.ajax({
+                                                    url:`api/v1/posts/${$(this).attr('data-num')}`,
+                                                    type: "DELETE",
+                                                })
+                                            })
+                                        });
+
+                                    },
                             error: function(xhr, status) {
-                                        if (gallery.attemps-- == 0) {
-                                            console.log('Over')
-                                            gallery.reset();
+                                        if (json_data.attemps-- == 0) {
+                                            $('body').append('<h1> Error Connection </h1>')
+                                            json_data.reset();
                                             return;
                                         }
                                         setTimeout(function() {
-                                            gallery.load();
-                                            }, gallery.delay *= 2);
+                                            json_data.load();
+                                            }, json_data.delay *= 2);
                                     }
 
                         });
-                                        },
+                },
 
             display: function (data) {},
-
             }
 
         $('#refresh_posts_html').on('click',function() {
-
-            $('div#result').load('api/v1/posts', function(data, status, response) {
+            $('div#html').load('api/v1/posts', function(data, status, response) {
                 console.dir({data,status,response})
 
+                $(document).ready(function() {
+                // URL для AJAX-запроса
+                var url = 'api/v1/posts';
+
+                // Выполняем AJAX-запрос
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    dataType: 'html',
+                    success: function(data) {
+                        console.log(data)
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('Ошибка при загрузке данных: ', textStatus, errorThrown);
+                    }
+                });
+            });
 
             })
         })
@@ -130,17 +156,9 @@
             //     .always(function(data,status,xhr) {
             //         // console.dir({data,status,xhr})
             //     })
-            // $.ajax({
-            //     type:"get",
-            //     url: 'api/v1/posts',
-            //     success: function(data) {
-            //         data.app
-            //         console.log(data)
-            //     }
-            // });
         })
 
-$('.post_card .delete_post').on('click', function(e) {
+        $('.post_card .delete_post').on('click', function(e) {
 
             $(this).parent().remove()
             $.ajax({
