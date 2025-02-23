@@ -18,7 +18,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with(['user', 'mentions.user', 'tags']);
+        // $posts = Post::with(['user', 'mentions.user', 'tags']);
 
         $collection = Post::query();
 
@@ -52,9 +52,8 @@ class PostController extends Controller
         $offset = max($offset, 0);
         $collection->offset($offset);
 
-        // $posts = Post::with(['user', 'mentions.user', 'tags'])->get();
 
-
+        $collection->with(['user', 'mentions.user', 'tags']);
         return $collection->get();
     }
 
