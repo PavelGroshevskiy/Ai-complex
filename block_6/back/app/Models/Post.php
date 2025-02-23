@@ -10,5 +10,21 @@ class Post extends Model
     use HasFactory;
 
     protected $table = 'posts';
-    protected $fillable = ['title', 'description','author'];
+    protected $fillable = ['title', 'description','author', 'user_id'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    function mentions()
+    {
+        return $this->hasMany(Mention::class);
+    }
+
+    function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'post_tags');
+    }
+
 }

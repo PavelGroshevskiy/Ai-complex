@@ -9,7 +9,9 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /**
+ * @use HasFactory<\Database\Factories\UserFactory>
+*/
     use HasFactory, Notifiable;
 
     /**
@@ -21,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'nickname',
     ];
 
     /**
@@ -32,6 +35,22 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    public function mentions()
+    {
+        return $this->hasMany(Mention::class);
+    }
+
+
+    public function mentionedPosts()
+    {
+        return $this->belongsToMany(Post::class, 'mentions', 'user_id', 'post_id');
+    }
 
     /**
      * Get the attributes that should be cast.

@@ -22,6 +22,7 @@ class PostFactory extends Factory
             'title' => fake()->title(),
             'description' => fake()->sentence(10),
             'author' => fake()->name(),
+            'user_id' => fake()->numberBetween(1, 10),
         ];
     }
 }
