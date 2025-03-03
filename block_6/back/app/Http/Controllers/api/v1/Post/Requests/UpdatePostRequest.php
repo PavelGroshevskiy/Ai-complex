@@ -22,7 +22,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'bail|required|unique:posts|max:255',
+            'title' => 'bail|required|max:255',
             'description' => 'required'
         ];
     }

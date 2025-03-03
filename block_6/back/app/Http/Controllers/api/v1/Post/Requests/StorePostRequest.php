@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Controllers\api\v1\Post\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -22,7 +22,7 @@ class StorePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'bail|required|unique:posts|max:255',
+            'title' => 'bail|required|max:255',
             'description' => 'required',
             'user_id' => 'integer',
             'author' => 'string'

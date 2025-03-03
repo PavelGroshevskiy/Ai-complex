@@ -4,6 +4,9 @@
     <div class="navbar__btns">
       <my-button @click="$router.push('/')">Посты</my-button>
       <my-button style="margin-left: 20px" @click="$router.push('/about')">О сайте</my-button>
+      <my-button style="margin-left: 20px" @click="$router.push('/login')">Login</my-button>
+      <my-button style="margin-left: 20px" @click="$router.push('/register')">Register</my-button>
+      <my-button style="margin-left: 20px">Logout</my-button>
     </div>
   </nav>
 </template>

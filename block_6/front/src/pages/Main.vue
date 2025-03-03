@@ -4,16 +4,19 @@
 
     <my-button @click="showDialog">Create Post</my-button>
     <my-dialog v-model:show="dialogVisible">
-      <post-form @create="createPost" />
+      <post-form />
     </my-dialog>
     <post-list :posts="posts" v-if="!isPostsLoading" />
     <div v-else>Loading...</div>
+    <p v-if="error">
+      {{ $router.push('/login') }}
+    </p>
   </div>
 </template>
 
 <script>
-import PostList from '@/components/PostList.vue'
-import PostForm from '@/components/PostForm.vue'
+import PostList from '@/app/components/PostList.vue'
+import PostForm from '@/app/components/PostForm.vue'
 import { fetchData } from '@/shared/lib/fetchData'
 
 export default {
@@ -28,10 +31,6 @@ export default {
   },
 
   methods: {
-    createPost(post) {
-      this.posts.push(post)
-      this.dialogVisible = false
-    },
     showDialog() {
       this.dialogVisible = true
     },
@@ -42,10 +41,11 @@ export default {
     },
   },
   setup() {
-    const { posts, isPostsLoading } = fetchData()
+    const { posts, isPostsLoading, error } = fetchData()
     return {
       posts,
       isPostsLoading,
+      error,
     }
   },
 }

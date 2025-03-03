@@ -1,17 +1,17 @@
 <template>
   <div>
-    <layout>
-      <router-view />
-    </layout>
+    <h1>Login</h1>
+
+    <login-form />
   </div>
 </template>
 
 <script>
-import Layout from '@/app/providers/Layout.vue'
+import LoginForm from '@/app/components/LoginForm.vue'
 
 export default {
   components: {
-    Layout,
+    LoginForm,
   },
 }
 </script>

@@ -18,8 +18,6 @@ class PostController extends Controller
      */
     public function index()
     {
-        // $posts = Post::with(['user', 'mentions.user', 'tags']);
-
         $collection = Post::query();
 
         $allowedFilterFields = (new Post())->getFillable();

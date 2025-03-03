@@ -1,17 +1,17 @@
 <template>
   <div>
-    <layout>
-      <router-view />
-    </layout>
+    <h1>Register</h1>
+
+    <register-form />
   </div>
 </template>
 
 <script>
-import Layout from '@/app/providers/Layout.vue'
+import RegisterForm from '@/app/components/RegisterForm.vue'
 
 export default {
   components: {
-    Layout,
+    RegisterForm,
   },
 }
 </script>
