@@ -14,8 +14,6 @@ export const fetchCreatePost = (title, description) => {
       data: {
         title: title,
         description: description,
-        user_id: 1,
-        author: 'Leon',
       },
       headers: {
         Accept: 'application/json',

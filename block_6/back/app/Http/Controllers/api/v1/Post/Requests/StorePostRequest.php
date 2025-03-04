@@ -24,8 +24,6 @@ class StorePostRequest extends FormRequest
         return [
             'title' => 'bail|required|max:255',
             'description' => 'required',
-            'user_id' => 'integer',
-            'author' => 'string'
         ];
     }
 }

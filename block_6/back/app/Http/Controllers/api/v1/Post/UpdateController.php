@@ -2,24 +2,25 @@
 
 namespace App\Http\Controllers\api\v1\Post;
 
+use App\Http\Controllers\api\v1\Post\Requests\UpdatePostRequest;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Post\UpdateRequest;
+
 use App\Models\Post;
+use Illuminate\Support\Facades\Gate;
 
 class UpdateController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function __invoke(UpdateRequest $request, Post $post)
+    public function __invoke(UpdatePostRequest $request, Post $post)
     {
-        $post = Post::findOrFail($post);
-        $post->update($request->only(['title', 'description']));
-        return response()->json(
-            [
-            'message' => 'success',
-            'post' => $post
-            ]
-        );
+
+
+        Gate::authorize('update', $post);
+
+
+        $fields = $request->validated();
+
+        $post->update($fields);
+
+        return ['post' => $post, 'user' => $post->user];
     }
 }

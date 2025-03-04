@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Post;
+namespace App\Http\Controllers\api\v1\Post\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateRequest extends FormRequest
+class UpdatePostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

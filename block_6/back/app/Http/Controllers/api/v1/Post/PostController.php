@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\api\v1\Post;
 
+use App\Http\Controllers\api\v1\Post\Requests\StorePostRequest;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StorePostRequest;
+
 use App\Models\Mention;
 use App\Models\Post;
 use App\Models\Tag;
