@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar">
-    <div @click="$router.push('/')">Vue 3</div>
+    <span v-if="user">User : {{ user.name }}</span>
     <div class="navbar__btns">
       <my-button @click="$router.push('/')">Посты</my-button>
       <my-button style="margin-left: 20px" @click="$router.push('/about')">О сайте</my-button>
@@ -12,7 +12,31 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      user: null,
+    }
+  },
+  methods: {
+    async getUser() {
+      if (localStorage.getItem('token')) {
+        const res = await fetch('http://localhost/api/v1/users', {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        })
+        const data = await res.json()
+        if (res.ok) {
+          this.user = data
+        }
+      }
+    },
+  },
+  mounted() {
+    this.getUser()
+  },
+}
 </script>
 
 <style scoped>

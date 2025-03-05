@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+
+use function Laravel\Prompts\error;
 
 class LoginController extends Controller
 {
@@ -24,14 +27,21 @@ class LoginController extends Controller
             'password' => ['required', 'string']
             ]
         );
-        // dd($validation);
-        if (Auth::attempt(
-            ['email' => $request->email,
-            'password' => $request->password]
-        )
-        ) {
-            $user = User::where('email', $request->email)->first();
 
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)
+        ) {
+            return response()->json(
+                [
+                    "errors"=> [
+                        "message"=> [
+                            "Incorrect credential"
+                        ]
+                    ]
+                        ], 401
+            );
+        }
             $token = $user->createToken($user->name);
 
             return response()->json(
@@ -41,21 +51,15 @@ class LoginController extends Controller
                 'token' => $token->plainTextToken,
                 ]
             );
-        } else {
-            return response()->json(
-                [
-                'message' => 'something went wrong',
-                ]
-            );
-        }
     }
+
 
     function logout(Request $request)
     {
         $request->user()->tokens()->delete();
         return response()->json(
             [
-                'message' => 'You are Logout',
+            'message' => 'You are Logout',
             ]
         );
     }

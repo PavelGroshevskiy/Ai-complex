@@ -2,21 +2,19 @@
   <div>
     <form @submit.prevent action="post">
       <my-input v-model="user.name" class="input" placeholder="name" />
+      <p v-if="errors.name">{{ errors.name[0] }}</p>
       <my-input v-model="user.email" class="input" placeholder="email" />
+      <p v-if="errors.email">{{ errors.email[0] }}</p>
       <my-input v-model="user.nickname" class="input" placeholder="nickname" />
+      <p v-if="errors.nickname">{{ errors.nickname[0] }}</p>
       <my-input v-model="user.password" class="input" placeholder="password" />
+      <p v-if="errors.password">{{ errors.password[0] }}</p>
       <my-input
         v-model="user.password_confirmation"
         class="input"
         placeholder="password_confirmation"
       />
-      <div v-if="errors.length">
-        <div v-for="error in errors">
-          <li>
-            {{ error }}
-          </li>
-        </div>
-      </div>
+
       <my-button @click="register" class="btn-register">Register</my-button>
     </form>
   </div>
@@ -34,7 +32,7 @@ export default {
         nickname: '',
         email: '',
       },
-      errors: [],
+      errors: {},
     }
   },
   methods: {
@@ -54,13 +52,18 @@ export default {
           'Content-Type': 'application/json',
           // 'Access-Control-Allow-Origin': 'http://localhost:5173',
         },
-      }).catch((error) => {
-        if (error.response && error.response.status === 403) {
-          console.error('Доступ запрещен из-за CORS')
-        } else {
-          console.error('Произошла ошибка:', error)
-        }
       })
+        .then((response) => {
+          localStorage.setItem('token', response.data.token)
+          this.$router.push('/')
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 403) {
+            console.error('Доступ запрещен из-за CORS')
+          } else {
+            this.errors = error.response.data.errors
+          }
+        })
     },
   },
 }

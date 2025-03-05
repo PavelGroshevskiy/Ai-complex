@@ -22,7 +22,6 @@ export const fetchData = () => {
               'Access-Control-Allow-Origin': '*',
             },
           })
-          console.log(data)
           posts.value = data
           const stringifyPosts = JSON.stringify(posts.value)
           // localStorage.setItem('posts', stringifyPosts)
