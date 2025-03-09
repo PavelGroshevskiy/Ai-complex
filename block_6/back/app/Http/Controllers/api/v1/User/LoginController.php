@@ -60,7 +60,7 @@ class LoginController extends Controller
         return response()->json(
             [
             'message' => 'You are Logout',
-            ]
+            ], 200,
         );
     }
 }

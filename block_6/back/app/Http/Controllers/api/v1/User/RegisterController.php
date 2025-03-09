@@ -27,7 +27,7 @@ class RegisterController extends Controller
         return response()->json(
             [
             'success'=> 'true',
-            'message'=> $user,
+            'user'=> $user,
             'token' => $token->plainTextToken,
             ]
         );

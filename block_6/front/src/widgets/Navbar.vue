@@ -1,20 +1,35 @@
 <template>
   <nav class="navbar">
-    <span v-if="user">User : {{ user.name }}</span>
+    <div>
+      <form @submit.prevent="authStore.logout" style="margin: 10px">
+        <my-button>Logout</my-button>
+      </form>
+    </div>
+    <div v-if="authStore.user">User : {{ authStore.user.name }}</div>
     <div class="navbar__btns">
-      <my-button @click="$router.push('/')">Посты</my-button>
-      <my-button style="margin-left: 20px" @click="$router.push('/about')">О сайте</my-button>
-      <my-button style="margin-left: 20px" @click="$router.push('/login')">Login</my-button>
-      <my-button style="margin-left: 20px" @click="$router.push('/register')">Register</my-button>
-      <my-button style="margin-left: 20px">Logout</my-button>
+      <my-button @click="$router.push({ name: 'main' })">Посты</my-button>
+      <my-button style="margin-left: 20px" @click="$router.push({ name: 'login' })"
+        >Login
+      </my-button>
+      <my-button style="margin-left: 20px" @click="$router.push({ name: 'register' })"
+        >Register
+      </my-button>
+
+      <my-button style="margin-left: 20px" @click="$router.push({ name: 'options_register' })"
+        >RegisterOptionsApi
+      </my-button>
     </div>
   </nav>
 </template>
 
 <script>
+import { useAuthStore } from '@/app/store/auth'
+import MyButton from '../shared/ui/MyButton.vue'
+
 export default {
   data() {
     return {
+      MyButton,
       user: null,
     }
   },
@@ -33,8 +48,15 @@ export default {
       }
     },
   },
+  setup() {
+    const authStore = useAuthStore()
+
+    return {
+      authStore,
+    }
+  },
   mounted() {
-    this.getUser()
+    this.authStore.getAuthUser()
   },
 }
 </script>

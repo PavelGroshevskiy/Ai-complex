@@ -26,7 +26,7 @@ export default defineConfig({
     // devServer: {
     //   proxy: {
     //     '/api': {
-    //       target: 'http://localhost:80:80', // Адрес вашего бэкенда
+    //       target: 'http://localhost:80:80',
     //       changeOrigin: true,
     //       pathRewrite: { '^/api': '' },
     //     },

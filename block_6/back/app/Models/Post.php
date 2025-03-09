@@ -14,8 +14,8 @@ class Post extends Model
     protected $table = 'posts';
     protected $fillable = ['title', 'description', 'user_id'];
 
-    // protected $casts = ['created_at' => 'date:d-m-Y \/\ H:i:s'];
-    protected $casts = ['created_at' => 'datetime'];
+    protected $casts = ['created_at' => 'date:d-m-Y \/\ H:i:s'];
+    // protected $casts = ['created_at' => 'datetime'];
 
     protected function title() :Attribute
     {
