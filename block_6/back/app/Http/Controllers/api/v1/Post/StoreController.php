@@ -16,12 +16,12 @@ class StoreController extends Controller
      */
     public function __invoke(StorePostRequest $request)
     {
+        $data = $request->validated();
+        $post = $request->user()->posts()->create($data);
+
         DB::transaction(
-            function () use ($request) {
-
-                $data = $request->validated();
-                $post = $request->user()->posts()->create($data);
-
+            function () use ($request , $post) {
+                
                 preg_match_all('/@(\w+)/', $request->description, $mentions);
                 foreach ($mentions[1] as $nickname) {
 
@@ -49,6 +49,5 @@ class StoreController extends Controller
                 'message'=>'Post creat succesfully'
                 ]
         );
-
     }
 }

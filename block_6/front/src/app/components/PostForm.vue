@@ -4,7 +4,6 @@
     <form @submit.prevent action="post">
       <my-input v-model="post.title" class="input" placeholder="title" />
       <my-input v-model="post.description" class="input" placeholder="description" />
-      <p v-if="responseFromServ">{{ responseFromServ }}</p>
       <div v-if="errors.length">
         <div v-for="error in errors">
           <li>
@@ -40,26 +39,23 @@ export default {
       if (!this.post.description) {
         this.errors.push('Description is required')
       }
-      // if (!this.errors.length) {
       axios({
         method: 'post',
         url: 'http://localhost/api/v1/user/posts',
         data: {
           title: this.post.title,
           description: this.post.description,
-          user_id: 1,
-          author: 'Leon',
         },
         headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'Access-Control-Allow-Origin': 'http://localhost:5173/',
           Accept: 'application/json',
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': 'http://localhost:5173',
         },
       })
         .then(function (response) {
           console.log(response.data)
           console.log(response.statusText)
-          // this.responseFromServ = response.data
         })
         .catch((error) => {
           if (error.response && error.response.status === 403) {
@@ -71,7 +67,6 @@ export default {
             console.error('Произошла ошибка:', error)
           }
         })
-      // }
     },
   },
   watch: {},

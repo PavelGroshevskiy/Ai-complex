@@ -13,14 +13,14 @@ class RegisterController extends Controller
     {
         $fields = $request->validate(
             [
-            'name' =>       ['required', 'string'],
-            'email' =>       ['required', 'string'],
-            'nickname' =>   ['required', 'string'],
-            'password' =>   ['required', 'string', 'confirmed']
+            'name' =>       ['required', 'string', 'max:50','min:3'],
+            'email' =>       ['required', 'string', 'unique:users', 'max:50', 'email'],
+            'nickname' =>   ['required', 'string','max:50','min:2'],
+            'password' =>   ['required', 'string', 'confirmed','min:6']
             ]
         );
 
-        $user = User::create($fields);
+        $user = User::query()->create($fields);
 
         $token = $user->createToken($request->name);
 

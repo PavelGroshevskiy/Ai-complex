@@ -6,7 +6,7 @@
     <my-dialog v-model:show="dialogVisible">
       <post-form />
     </my-dialog>
-    <post-list :posts="posts" v-if="!isPostsLoading" />
+    <post-list :posts="posts.data" v-if="!isPostsLoading" />
     <div v-else>Loading...</div>
     <p v-if="error">
       {{ $router.push('/login') }}

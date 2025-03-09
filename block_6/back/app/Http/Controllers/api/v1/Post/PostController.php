@@ -61,17 +61,14 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        // dd($data);
-        // return Post::create($data);
         DB::transaction(
             function () use ($request) {
 
                 $data = $request->validated();
-                $post = Post::create($data);
+                $post = $request->user()->posts()->create($data);
 
                 preg_match_all('/@(\w+)/', $request->description, $mentions);
                 foreach ($mentions[1] as $nickname) {
-                    dd($mentions);
 
                     $user = User::where('nickname', $nickname)->first();
                     if ($user) {
@@ -91,8 +88,12 @@ class PostController extends Controller
                 }
             }
         );
-
-        return response()->json(['message' => 'Post created successfully'], 201);
+        return response()->json(
+            [
+                'success' => 'true',
+                'message'=>'Post creat succesfully'
+                ]
+        );
     }
 
 

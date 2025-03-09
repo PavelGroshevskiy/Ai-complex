@@ -1,14 +1,15 @@
 <template>
   <div class="post">
     <div>
-      <div>
-        {{ post.id }}
-      </div>
+      <div>#{{ post.id }} -> {{ post.author }} - nickname:{{ post.nickname }}</div>
       <div>
         {{ post.title }}
       </div>
       <div>
         {{ post.description }}
+      </div>
+      <div>
+        {{ post.created_at }}
       </div>
     </div>
     <div class="post_btns">

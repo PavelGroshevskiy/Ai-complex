@@ -19,6 +19,9 @@ export const fetchData = () => {
           console.log('from fetch')
           const { data } = await axios.get(DATA_URI, {
             headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
               'Access-Control-Allow-Origin': '*',
             },
           })
