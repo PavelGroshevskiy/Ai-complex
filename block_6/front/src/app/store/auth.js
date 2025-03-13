@@ -47,7 +47,7 @@ export const useAuthStore = defineStore('authStore', {
 
     //  AUTH
 
-    auth(apiRoute, formData) {
+    loginAuth(apiRoute, formData) {
       axios({
         method: 'POST',
         url: `http://localhost/api/v1/${apiRoute}`,

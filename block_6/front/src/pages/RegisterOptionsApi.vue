@@ -1,18 +1,18 @@
 <template>
   <div>
     <h1>Register</h1>
-    <register-form-options />
+
+    <register-form-options :errors="errors" @register="(user) => loginAuth('register', user)" />
   </div>
 </template>
 
-<script>
+<script setup>
 import RegisterFormOptions from '@/app/components/RegisterFormOptions.vue'
+import { useAuthStore } from '@/app/store/auth'
+import { storeToRefs } from 'pinia'
 
-export default {
-  components: {
-    RegisterFormOptions,
-  },
-}
+const { loginAuth } = useAuthStore()
+const { errors } = storeToRefs(useAuthStore())
 </script>
 
 <style lang="scss" scoped></style>

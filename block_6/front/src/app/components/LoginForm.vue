@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form @submit.prevent="() => auth('login', user)" action="post">
+    <form @submit.prevent="auth" action="post">
       <my-input v-model="user.email" class="input" placeholder="email" />
       <p class="error" v-if="errors.email">{{ errors.email[0] }}</p>
       <my-input v-model="user.password" class="input" placeholder="password" />
@@ -15,10 +15,12 @@
 </template>
 
 <script>
-import { storeToRefs } from 'pinia'
-import { useAuthStore } from '../store/auth'
-
 export default {
+  props: {
+    errors: {
+      type: Object,
+    },
+  },
   data() {
     return {
       user: {
@@ -27,12 +29,11 @@ export default {
       },
     }
   },
-  setup() {
-    const { auth } = useAuthStore()
-    const { errors } = storeToRefs(useAuthStore())
-    return { auth, errors }
+  methods: {
+    auth() {
+      this.$emit('auth', this.user)
+    },
   },
-  methods: {},
 }
 </script>
 

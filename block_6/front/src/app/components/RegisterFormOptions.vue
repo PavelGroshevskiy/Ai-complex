@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form @submit.prevent="() => auth('register', formData)" action="post">
+    <form @submit.prevent="register" action="post">
       <my-input v-model="formData.name" class="input" placeholder="name" />
       <p class="error" v-if="errors.name">{{ errors.name[0] }}</p>
 
@@ -26,11 +26,17 @@
 
 <script setup>
 import { reactive } from 'vue'
-import { useAuthStore } from '../store/auth'
-import { storeToRefs } from 'pinia'
+const props = defineProps({
+  errors: {
+    type: Object,
+  },
+})
 
-const { auth } = useAuthStore()
-const { errors } = storeToRefs(useAuthStore())
+const emit = defineEmits(['register'])
+
+function register() {
+  emit('register', formData)
+}
 
 const formData = reactive({
   name: '',

@@ -4,9 +4,7 @@ namespace App\Http\Controllers\api\v1\Post;
 
 use App\Http\Controllers\Controller;
 use App\Models\Post;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class IndexController extends Controller
 {
@@ -72,7 +70,16 @@ class IndexController extends Controller
 
 
         // $followingIds = DB::table('users')->pluck('name');
+        // dd($user->followings());
+        // $posts = $user->posts()->get()->toArray();
+        // $associate = Post::first()->user()->associate($user);
+
+        // $mentions = $user->mentions()->get()->toArray();
+
+        // dd($associate);
+
         $followingIds = $user->followings->pluck('id');
+
 
         $followingPosts = Post::whereIn('user_id', $followingIds)
             ->select('posts.*')
@@ -104,6 +111,6 @@ class IndexController extends Controller
         // $offset = max($offset, 0);
         // $collection->offset($offset);
 
-        return ($posts);
+        return $posts;
     }
 }
